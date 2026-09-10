@@ -1,6 +1,8 @@
+from views.main_screen_vws import main_screen
+
 def main():
 
-    return
+    main_screen()
     
 
 if __name__ == "__main__":
