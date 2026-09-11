@@ -5,8 +5,8 @@ from config.paths import ASSETS_IMAGES
 
 def login_screen(parent):
 
-    window_width = 800
-    window_height = 550
+    window_width = 720
+    window_height = 500
     screen_width = parent.winfo_screenwidth()
     screen_height = parent.winfo_screenheight()
 
@@ -18,185 +18,191 @@ def login_screen(parent):
 
     frame_geral = ctk.CTkFrame(
         master = parent,
-        width = 800,
-        height = 550,
-        corner_radius = 0,
-        fg_color = '#b1bdd7'
+        width = 720,
+        height = 500,
+        corner_radius = 0
     )
 
     frame_geral.grid(row = 0, column = 0, sticky = 'nsew')
     frame_geral.grid_propagate(False)
 
-    frame_1 = ctk.CTkFrame(
+    bg_image = ctk.CTkImage(
+        light_image = Image.open(ASSETS_IMAGES/'login_page_template.png'),
+        dark_image = Image.open(ASSETS_IMAGES/'login_page_template.png'),
+        size = ((720, 500))
+    )
+
+    label_bgimage = ctk.CTkLabel(
         master = frame_geral,
-        width = 320,
-        height = 400,
-        corner_radius = 20,
-        fg_color = '#FFFFFF'
+        width = 0,
+        height = 0,
+        text = '',
+        image = bg_image
+    )
+
+    label_bgimage.place(x = 0, y = 0, relwidth = 1, relheight = 1)
+
+    login_frame = ctk.CTkFrame(
+        master = frame_geral,
+        width = 360,
+        height = 420,
+        corner_radius = 10,
+        fg_color = '#FFFFFF',
+        bg_color = '#05385b'
     )
 
     frame_geral.grid_columnconfigure(0, weight = 1)
+    frame_geral.grid_rowconfigure(0, weight = 1)
 
-    frame_1.grid(row = 0, column = 1, sticky = 'nsew', padx = 25, pady = 50)
+    login_frame.grid(row = 0, column = 0, sticky = 'nsw', padx = 30, pady = 40)
 
-    frame_2 = ctk.CTkFrame(
-        master = frame_geral,
-        width = 420,
-        height = 530,
-        fg_color = 'transparent'
+    logo_img = ctk.CTkImage(
+        light_image = Image.open(ASSETS_IMAGES/'trustmed_icon_logo.png'),
+        dark_image = Image.open(ASSETS_IMAGES/'trustmed_icon_logo.png'),
+        size = ((140, 20))
     )
 
-    frame_geral.grid_columnconfigure(1, weight = 1)
-
-    frame_2.grid(row = 0, column = 0, sticky = 'nsw', padx = (10, 0), pady = 10)
-
-    img = ctk.CTkImage(
-        light_image = Image.open(ASSETS_IMAGES/'trustmed_image.png'),
-        dark_image = Image.open(ASSETS_IMAGES/'trustmed_image.png'),
-        size = ((420, 530))
-    )
-
-    label_img = ctk.CTkLabel(
-        master = frame_2,
-        text = '',
-        image = img
-    )
-
-    label_img.pack(fill = 'both', expand = True)
-
-    icon_img = ctk.CTkImage(
-        light_image = Image.open(ASSETS_IMAGES/'doctor_icon.jpeg'),
-        dark_image = Image.open(ASSETS_IMAGES/'doctor_icon.jpeg'),
-        size = ((100, 100))
-    )
-
-    label_icon = ctk.CTkLabel(
-        master = frame_1,
+    label_logo = ctk.CTkLabel(
+        master = login_frame,
         width = 0,
         height = 0,
         text = '',
-        image = icon_img
+        image = logo_img
     )
 
-    frame_1.grid_propagate(False)
-    frame_1.grid_columnconfigure(0, weight = 1)
-
-    label_icon.grid(row = 0, column = 0, sticky = 'new', pady = (30, 0))
+    login_frame.pack_propagate(False)
+    label_logo.pack(pady = (35, 0))
 
     label_title = ctk.CTkLabel(
-        master = frame_1,
+        master = login_frame,
         width = 0,
         height = 0,
-        font = ('Inter', 22, 'bold'),
+        font = ('Montserrat', 21, 'bold'),
         text = 'Bem-vindo de volta!'
     )
 
-    label_title.grid(row = 1, column = 0, sticky = 'new', pady = (15, 0))
+    label_title.pack(pady = (20, 0))
 
     label_subtitle = ctk.CTkLabel(
-        master = frame_1,
+        master = login_frame,
         width = 0,
         height = 0,
-        font = ('DejaVu Sans Condensed', 14),
+        font = ('Montserrat', 14),
         text = 'Insira seus dados de acesso'
     )
 
-    label_subtitle.grid(row = 2, column = 0, sticky = 'new', pady = 0)
+    label_subtitle.pack(pady = 0)
 
-    label_nome = ctk.CTkLabel(
-        master = frame_1,
-        width = 0,
-        height = 0,
-        font = ('DejaVu Sans Condensed', 10),
-        text = 'Usuário'
+    usericon_img = ctk.CTkImage(
+        light_image = Image.open(ASSETS_IMAGES/'user_icon.png'),
+        dark_image = Image.open(ASSETS_IMAGES/'user_icon.png'),
+        size = ((12, 12))
     )
 
-    label_nome.grid(row = 3, column = 0, sticky = 'nw', padx = 35, pady = (25, 0))
+    label_usuario = ctk.CTkLabel(
+        master = login_frame,
+        width = 0,
+        height = 0,
+        image = usericon_img,
+        compound = 'left',
+        font = ('Inter', 12),
+        text = ' Usuário'
+    )
+
+    label_usuario.pack(padx = 52, pady = (35, 0), side = 'top', anchor = 'w')
 
     entry_1 = ctk.CTkEntry(
-        master = frame_1,
-        width = 250,
-        height = 20,
+        master = login_frame,
+        width = 300,
+        height = 25,
         corner_radius = 5,
         border_width = 1,
-        font = ('DejaVu Sans Condensed', 10)
+        font = ('Inter', 10)
     )
 
-    entry_1.grid(row = 4, column = 0, sticky = 'nw', padx = 35, pady = (2, 0))
+    entry_1.pack(padx = 50, pady = (2, 0), side = 'top', anchor = 'w')
+
+    lockicon_img = ctk.CTkImage(
+        light_image = Image.open(ASSETS_IMAGES/'lock_icon.png'),
+        dark_image = Image.open(ASSETS_IMAGES/'lock_icon.png'),
+        size = ((12, 12))
+    )
 
     label_senha = ctk.CTkLabel(
-        master = frame_1,
+        master = login_frame,
         width = 0,
         height = 0,
-        font = ('DejaVu Sans Condensed', 10),
-        text = 'Senha'
+        image = lockicon_img,
+        compound = 'left',
+        font = ('Inter', 12),
+        text = ' Senha'
     )
 
-    label_senha.grid(row = 5, column = 0, sticky = 'nw', padx = 35, pady = (10, 0))
+    label_senha.pack(padx = 52, pady = (10, 0), side = 'top', anchor = 'w')
 
     entry_2 = ctk.CTkEntry(
-        master = frame_1,
-        width = 250,
-        height = 20,
+        master = login_frame,
+        width = 300,
+        height = 25,
         corner_radius = 5,
         border_width = 1,
-        font = ('DejaVu Sans Condensed', 10),
+        font = ('Inter', 10),
         show = '•'
     )
 
-    entry_2.grid(row = 6, column = 0, sticky = 'nw', padx = 35, pady = (2, 0))
+    entry_2.pack(padx = 50, pady = (2, 0), side = 'top', anchor = 'w')
 
-    label_esqueciSenha = ctk.CTkLabel(
-        master = frame_1,
+    label_esqueci_minha_senha = ctk.CTkLabel(
+        master = login_frame,
         width = 0,
         height = 0,
-        font = ('DejaVu Sans Condensed', 9, 'underline'),
+        font = ('Inter', 8, 'underline'),
         text = 'Esqueci minha senha',
         cursor = 'hand2'
     )
 
-    label_esqueciSenha.grid(row = 7, column = 0, sticky = 'se', pady = (2, 0), padx = (0, 40))
+    label_esqueci_minha_senha.pack(padx = 55, pady = (2, 0), side = 'top', anchor = 'e')
 
     button_login = ctk.CTkButton(
-        master = frame_1,
+        master = login_frame,
         width = 200,
-        height = 20,
+        height = 25,
         corner_radius = 5,
-        font = ('Inter', 14, 'bold'),
-        fg_color = '#ff3131',
-        hover_color = '#D92727',
-        text_color = 'white',
         text = 'Login',
+        text_color = '#FFFFFF',
+        font = ('Montserrat', 12, 'bold'),
+        fg_color = '#FF3131',
+        hover_color = '#D92828',
         cursor = 'hand2'
     )
 
-    button_login.grid(row = 8, column = 0, sticky = 'n', pady = (25, 0))
+    button_login.pack(pady = (30, 0))
 
-    button_cadastro = ctk.CTkButton(
-        master = frame_1,
-        width = 200,
-        height = 20,
-        corner_radius = 5,
-        font = ('Inter', 14, 'bold'),
-        fg_color = '#ff3131',
-        hover_color = '#D92727',
-        text_color = 'white',
-        text = 'Cadastro',
-        cursor = 'hand2'
-    )
-
-    button_cadastro.grid(row = 9, column = 0, sticky = 'n', pady = 5)
-
-    label_versao = ctk.CTkLabel(
-        master = frame_1,
+    label_divisoria = ctk.CTkLabel(
+        master = login_frame,
         width = 0,
         height = 0,
-        font = ('DejaVu Sans Condensed', 10),
-        text = 'v. beta 0.01'
+        font = ('Inter', 10),
+        text = '─'*16+'  admin  '+'─'*16,
+        text_color = '#666666'
     )
 
-    frame_1.grid_rowconfigure(10, weight = 1)
+    label_divisoria.pack(pady = (15, 0))
 
-    label_versao.grid(row = 10, column = 0, sticky = 's', pady = (0, 10))
+    button_cadastro = ctk.CTkButton(
+        master = login_frame,
+        width = 200,
+        height = 25,
+        corner_radius = 5,
+        text = 'Cadastrar Usuário',
+        text_color = '#FFFFFF',
+        font = ('Montserrat', 12, 'bold'),
+        fg_color = '#FF3131',
+        hover_color = '#D92828',
+        cursor = 'hand2'
+    )
+
+    button_cadastro.pack(pady = (15, 0))
+
 
     return frame_geral
