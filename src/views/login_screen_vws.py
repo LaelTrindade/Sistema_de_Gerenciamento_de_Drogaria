@@ -2,6 +2,7 @@ import customtkinter as ctk
 from PIL import Image
 from src.config.paths import ASSETS_IMAGES
 from src.controllers.auth_controller import validar_login
+from tkinter import messagebox
 
 
 def login_screen(parent):
@@ -11,9 +12,9 @@ def login_screen(parent):
       senha = entry_2.get()
       sucesso, mensagem = validar_login(usuario, senha)
       if sucesso:
-        print(mensagem)
+        messagebox.showinfo("Sucesso", mensagem)
       else:
-        print(mensagem)
+        messagebox.showerror("Erro", mensagem)
                  
     window_width = 720
     window_height = 500
