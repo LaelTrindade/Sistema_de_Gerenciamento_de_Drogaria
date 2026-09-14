@@ -1,4 +1,4 @@
-from views.main_screen_vws import main_screen
+from src.views.main_screen_vws import main_screen
 
 def main():
 

@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from PIL import Image
-from config.paths import ASSETS_IMAGES
+from src.config.paths import ASSETS_IMAGES
 
 
 def login_screen(parent):

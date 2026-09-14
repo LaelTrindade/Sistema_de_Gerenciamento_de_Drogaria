@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from views.login_screen_vws import login_screen
+from src.views.login_screen_vws import login_screen
 
 
 def main_screen():
@@ -13,3 +13,6 @@ def main_screen():
 
 
     main_window.mainloop()
+
+if __name__ == '__main__':
+ main_screen()
