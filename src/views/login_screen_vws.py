@@ -1,10 +1,20 @@
 import customtkinter as ctk
 from PIL import Image
 from src.config.paths import ASSETS_IMAGES
+from src.controllers.auth_controller import validar_login
 
 
 def login_screen(parent):
 
+    def clicar_entrar():
+      usuario = entry_1.get()
+      senha = entry_2.get()
+      sucesso, mensagem = validar_login(usuario, senha)
+      if sucesso:
+        print(mensagem)
+      else:
+        print(mensagem)
+                 
     window_width = 720
     window_height = 500
     screen_width = parent.winfo_screenwidth()
@@ -173,7 +183,8 @@ def login_screen(parent):
         font = ('Montserrat', 12, 'bold'),
         fg_color = '#FF3131',
         hover_color = '#D92828',
-        cursor = 'hand2'
+        cursor = 'hand2',
+        command=clicar_entrar,
     )
 
     button_login.pack(pady = (30, 0))
