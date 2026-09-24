@@ -1,8 +1,8 @@
-from src.views.main_screen_vws import main_screen
+from src.views.main_screen_vws import iniciar_app
 
 def main():
 
-    main_screen()
+    iniciar_app()
     
 
 if __name__ == "__main__":

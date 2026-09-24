@@ -1,20 +1,31 @@
 import customtkinter as ctk
 from PIL import Image
-from src.config.paths import ASSETS_IMAGES
+from src.config.paths import IMAGES_LOGIN_SCREEN
 from src.controllers.auth_controller import validar_login
-from tkinter import messagebox
+from src.views.messagebox_vws import exibir_messagebox
 
 
 def login_screen(parent):
 
     def clicar_entrar():
-      usuario = entry_1.get()
-      senha = entry_2.get()
-      sucesso, mensagem = validar_login(usuario, senha)
-      if sucesso:
-        messagebox.showinfo("Sucesso", mensagem)
-      else:
-        messagebox.showerror("Erro", mensagem)
+
+        from src.views.main_screen_vws import main_screen
+
+        usuario = entry_1.get()
+        senha = entry_2.get()
+
+        sucesso, mensagem = validar_login(usuario, senha)
+
+        if sucesso:
+
+            frame_geral.destroy()
+            parent.resizable(True, True)
+
+            main_screen(parent)
+
+        else:
+            exibir_messagebox(parent, "Erro", mensagem)
+
                  
     window_width = 720
     window_height = 500
@@ -38,8 +49,8 @@ def login_screen(parent):
     frame_geral.grid_propagate(False)
 
     bg_image = ctk.CTkImage(
-        light_image = Image.open(ASSETS_IMAGES/'login_page_template.png'),
-        dark_image = Image.open(ASSETS_IMAGES/'login_page_template.png'),
+        light_image = Image.open(IMAGES_LOGIN_SCREEN/'login_page_template.png'),
+        dark_image = Image.open(IMAGES_LOGIN_SCREEN/'login_page_template.png'),
         size = ((720, 500))
     )
 
@@ -68,8 +79,8 @@ def login_screen(parent):
     login_frame.grid(row = 0, column = 0, sticky = 'nsw', padx = 30, pady = 40)
 
     logo_img = ctk.CTkImage(
-        light_image = Image.open(ASSETS_IMAGES/'trustmed_icon_logo.png'),
-        dark_image = Image.open(ASSETS_IMAGES/'trustmed_icon_logo.png'),
+        light_image = Image.open(IMAGES_LOGIN_SCREEN/'trustmed_icon_logo.png'),
+        dark_image = Image.open(IMAGES_LOGIN_SCREEN/'trustmed_icon_logo.png'),
         size = ((140, 20))
     )
 
@@ -105,8 +116,8 @@ def login_screen(parent):
     label_subtitle.pack(pady = 0)
 
     usericon_img = ctk.CTkImage(
-        light_image = Image.open(ASSETS_IMAGES/'user_icon.png'),
-        dark_image = Image.open(ASSETS_IMAGES/'user_icon.png'),
+        light_image = Image.open(IMAGES_LOGIN_SCREEN/'user_icon.png'),
+        dark_image = Image.open(IMAGES_LOGIN_SCREEN/'user_icon.png'),
         size = ((12, 12))
     )
 
@@ -134,8 +145,8 @@ def login_screen(parent):
     entry_1.pack(padx = 50, pady = (2, 0), side = 'top', anchor = 'w')
 
     lockicon_img = ctk.CTkImage(
-        light_image = Image.open(ASSETS_IMAGES/'lock_icon.png'),
-        dark_image = Image.open(ASSETS_IMAGES/'lock_icon.png'),
+        light_image = Image.open(IMAGES_LOGIN_SCREEN/'lock_icon.png'),
+        dark_image = Image.open(IMAGES_LOGIN_SCREEN/'lock_icon.png'),
         size = ((12, 12))
     )
 
@@ -185,36 +196,19 @@ def login_screen(parent):
         fg_color = '#FF3131',
         hover_color = '#D92828',
         cursor = 'hand2',
-        command=clicar_entrar,
+        command = clicar_entrar
     )
 
     button_login.pack(pady = (30, 0))
 
-    label_divisoria = ctk.CTkLabel(
-        master = login_frame,
-        width = 0,
-        height = 0,
-        font = ('Inter', 10),
-        text = '─'*16+'  admin  '+'─'*16,
-        text_color = '#666666'
+    label_1 = ctk.CTkLabel(
+       master = login_frame,
+       width = 0,
+       height = 0,
+       font = ('DejaVu Sans Condensed', 12, 'italic'),
+       text = 'Desenvolvido por TrustMED+ Team\n© 2026 — Todos os direitos reservados.'
     )
 
-    label_divisoria.pack(pady = (15, 0))
-
-    button_cadastro = ctk.CTkButton(
-        master = login_frame,
-        width = 200,
-        height = 25,
-        corner_radius = 5,
-        text = 'Cadastrar Usuário',
-        text_color = '#FFFFFF',
-        font = ('Montserrat', 12, 'bold'),
-        fg_color = '#FF3131',
-        hover_color = '#D92828',
-        cursor = 'hand2'
-    )
-
-    button_cadastro.pack(pady = (15, 0))
-
+    label_1.pack(pady = (50, 0))
 
     return frame_geral
