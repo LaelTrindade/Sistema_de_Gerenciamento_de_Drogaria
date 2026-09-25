@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from PIL import Image
 from src.config.paths import IMAGES_DASHBOARD
-
+from src.controllers.dashboard_controller import obter_dados_dashboard
 
 def exibir_dashboard(frame_parent):
 
@@ -9,8 +9,15 @@ def exibir_dashboard(frame_parent):
 
     frame_parent.grid_rowconfigure(3, weight = 1)
     frame_parent.grid_rowconfigure(4, weight = 1)
-
-# Início [Texto Auxiliar]
+    (
+            faturamento,
+            medicamentos,
+            estoque,
+            alertas,
+            dias_semana,
+            valores_vendas,
+            relatorios,
+        ) = obter_dados_dashboard()
 
     hello_user = ctk.CTkLabel(
         master = frame_parent,
@@ -92,7 +99,7 @@ def exibir_dashboard(frame_parent):
         width = 0,
         height = 0,
         font = ('Inter', 18, 'bold'),
-        text = 'R$ 581,67'
+        text = faturamento
     )
 
     lb2_card_vendas.grid(row = 2, column = 0, sticky = 'w', padx = 20, pady = (3, 0))
@@ -145,7 +152,7 @@ def exibir_dashboard(frame_parent):
         width = 0,
         height = 0,
         font = ('Inter', 18, 'bold'),
-        text = '119 und'
+        text = medicamentos,
     )
 
     lb2_card_medicamentos.grid(row = 2, column = 0, sticky = 'w', padx = 20, pady = (3, 0))
@@ -198,7 +205,7 @@ def exibir_dashboard(frame_parent):
         width = 0,
         height = 0,
         font = ('Inter', 18, 'bold'),
-        text = '62 und'
+        text = estoque,
     )
 
     lb2_card_estoque.grid(row = 2, column = 0, sticky = 'w', padx = 20, pady = (3, 0))
@@ -308,23 +315,8 @@ def exibir_dashboard(frame_parent):
 
     column_horario.grid(row = 0, column = 3, sticky = 'new', pady = 5)
 
-
-
-        # Início [Teste para verificação de funcionamento e layout]
-    import random
-
-    produtos_exemplo = [
-        'Dipirona 500mg', 'Paracetamol 750mg', 'Ibuprofeno 400mg', 'Vitamina C',
-        'Álcool em Gel', 'Soro Fisiológico', 'Protetor Solar', 'Shampoo Anticaspa', 
-        'Sabonete Líquido', 'Termômetro Digital', 'Curativo Adesivo', 'Antialérgico'
-    ]
-
-    for i in range(15):
-        produto = random.choice(produtos_exemplo)
-        quantidade = random.randint(1, 15)
-        valor = round(random.uniform(5, 200), 2)
-        horario = f'{random.randint(8, 21):02d}:{random.randint(0, 59):02d}'
-
+# Início [Listagem de Relatórios]
+    for i, (produto, quantidade, valor, horario) in enumerate(relatorios):
         produto_texto = produto if len(produto) <= 14 else produto[:12] + '...'
 
         lb_produto = ctk.CTkLabel(
@@ -348,7 +340,7 @@ def exibir_dashboard(frame_parent):
             master = sf_relatorios,
             width = 90,
             height = 20,
-            text = f'R$ {valor:.2f}'
+            text = f'R$ {float(valor):.2f}'
         )
         lb_valor.grid(row = i + 1, column = 2, sticky = 'new', padx = 5, pady = 2)
 
@@ -356,15 +348,12 @@ def exibir_dashboard(frame_parent):
             master = sf_relatorios,
             width = 80,
             height = 20,
-            text = horario
+            text = str(horario)
         )
         lb_horario.grid(row = i + 1, column = 3, sticky = 'new', pady = 2)
-        # Fim [Teste para verificação de funcionamento e layout].
+        # Fim [Listagem de Relatórios].
+
     
-# Fim [Frame de Acesso Rápido].
-
-
-
 # Início [Frame de Alertas].
 
     fr_alertas = ctk.CTkFrame(
@@ -432,7 +421,7 @@ def exibir_dashboard(frame_parent):
         height = 0,
         anchor = 'w',
         font = ('Inter', 12),
-        text = '• Ibuprofeno 400mg'
+        text = alertas[0],
     )
 
     alert_1aux.grid(row = 1, column = 0, sticky = 'new', padx = 35, pady = (2, 20))
@@ -460,7 +449,7 @@ def exibir_dashboard(frame_parent):
         height = 0,
         anchor = 'w',
         font = ('Inter', 12),
-        text = '• Dipirona 500mg'
+        text = alertas[1],
     )
 
     alert_2aux.grid(row = 3, column = 0, sticky = 'new', padx = 35, pady = (2, 20))
@@ -488,7 +477,7 @@ def exibir_dashboard(frame_parent):
         height = 0,
         anchor = 'w',
         font = ('Inter', 12),
-        text = '• Paracetamol 750mg'
+        text = alertas[2],
     )
 
     alert_3aux.grid(row = 5, column = 0, sticky = 'new', padx = 35, pady = (2, 0))
@@ -527,8 +516,8 @@ def exibir_dashboard(frame_parent):
     from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
     import numpy as np
 
-    dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
-    vendas = [420, 610, 380, 700, 890, 1200, 540]
+    dias = dias_semana
+    vendas = valores_vendas
 
     fig = Figure(figsize = (5, 2.2), dpi = 100)
     fig.patch.set_facecolor('#FFFFFF')

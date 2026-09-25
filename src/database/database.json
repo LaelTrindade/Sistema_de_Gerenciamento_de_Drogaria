@@ -1,0 +1,11 @@
+{
+    "faturamento": "R$ 0,00",
+    "medicamentos": "0 und",
+    "estoque": "0 und",
+    "alertas": [],
+    "vendas_semana": {
+        "dias": ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+        "valores": [0, 0, 0, 0, 0, 0, 0]
+    },
+    "relatorios": []
+}
