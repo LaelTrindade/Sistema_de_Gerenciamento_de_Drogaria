@@ -91,12 +91,15 @@ def main_screen(parent):
 
     topbar.grid_propagate(False)
 
+    relogio_id = None
+
     def atualizar_relogio():
 
+        nonlocal relogio_id
         data, hora = obter_data_hora()
 
         calendar.configure(text = f'    {data}\n    {hora}')
-        calendar.after(1000, atualizar_relogio)
+        relogio_id = calendar.after(1000, atualizar_relogio)
 
 
     logo_icon = ctk.CTkLabel(
@@ -316,6 +319,36 @@ def main_screen(parent):
 
     reports.grid(row = 5, column = 0, sticky = 'ew', padx = 10, pady = (15, 0))
 
+
+    def exit_app():
+
+        # 1. Para o relógio antes de destruir o widget dele
+        if relogio_id is not None:
+            calendar.after_cancel(relogio_id)
+
+        # 2. Destrói tudo que a main_screen colocou na janela
+        for widget in parent.winfo_children():
+            widget.destroy()
+
+        
+        if platform.system() == 'Windows':
+
+            parent.state('normal')
+
+        else:
+
+            parent.attributes('-zoomed', False)
+
+        # 4. Volta os pesos do grid ao padrão
+        parent.grid_columnconfigure(1, weight = 0)
+        parent.grid_rowconfigure(1, weight = 0)
+
+        parent.update_idletasks()
+
+        # 5. Chama a tela de login de volta
+        login_screen(parent)
+
+
     exit = ctk.CTkButton(
         master = sidebar,
         width = 120,
@@ -333,7 +366,8 @@ def main_screen(parent):
             light_image = Image.open(IMAGES_MAIN_SCREEN/'exit_icon.png'),
             dark_image = Image.open(IMAGES_MAIN_SCREEN/'exit_icon.png'),
             size = ((22, 22))
-        )
+        ),
+        command = exit_app
     )
 
     exit.grid(row = 7, column = 0, padx = 10, sticky = 'ew', pady = 15)
