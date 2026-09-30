@@ -1,16 +1,33 @@
+import json
+import bcrypt
+from src.config.paths import CAMINHO_USERS_JSON
+
+
+def carregar_usuarios():
+  """Lê a lista de usuários do JSON."""
+  if not CAMINHO_USERS_JSON.exists():
+    return []
+
+  with open(CAMINHO_USERS_JSON, "r", encoding="utf-8") as arquivo:
+    return json.load(arquivo).get("usuarios", [])
+
+
 def validar_login(usuario, senha):
-  
-  usuario_correto = "admin"
-  senha_correta = "1234"
 
   if not usuario or not senha:
-
     return False, "Preencha todos os campos."
 
-  if usuario == usuario_correto and senha == senha_correta:
+  for u in carregar_usuarios():
 
-    return True, "Login realizado com sucesso!"
-  
-  else:
+    if u["login"].lower() == usuario.strip().lower():
 
-    return False, "Usuário ou senha incorretos."
+      senha_ok = bcrypt.checkpw(
+          senha.encode("utf-8"), u["senha_hash"].encode("utf-8")
+      )
+
+      if senha_ok and u.get("ativo", True):
+        return True, "Login realizado com sucesso!"
+
+      break
+
+  return False, "Usuário ou senha incorretos."

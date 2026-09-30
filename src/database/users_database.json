@@ -1,0 +1,12 @@
+{
+    "usuarios": [
+        {
+            "id": 1,
+            "nome": "Administrador",
+            "login": "administrador",
+            "senha_hash": "$2b$12$uwM.P3iNBJg2zp.RrFZcreHjPKvvJsJBBRDQjb9okkkrHhysfyWMa",
+            "perfil": "admin",
+            "ativo": true
+        }
+    ]
+}
