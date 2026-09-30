@@ -1,12 +1,10 @@
 import json
-from pathlib import Path
-
-CAMINHO_JSON = Path(__file__).parent.parent.parent / "database" / "database.json"
+from src.config.paths import CAMINHO_DASHBOARD_JSON
 
 
 def carregar_dados():
   """Lê os dados do arquivo JSON de forma segura."""
-  if not CAMINHO_JSON.exists():
+  if not CAMINHO_DASHBOARD_JSON.exists():
     return {
         "faturamento": "R$ 0,00",
         "medicamentos": "0 und",
@@ -19,13 +17,13 @@ def carregar_dados():
         "relatorios": [],
     }
 
-  with open(CAMINHO_JSON, "r", encoding="utf-8") as arquivo:
+  with open(CAMINHO_DASHBOARD_JSON, "r", encoding="utf-8") as arquivo:
     return json.load(arquivo)
 
 
 def salvar_dados(dados):
   """Salva as alterações atualizadas no arquivo JSON."""
-  with open(CAMINHO_JSON, "w", encoding="utf-8") as arquivo:
+  with open(CAMINHO_DASHBOARD_JSON, "w", encoding="utf-8") as arquivo:
     json.dump(dados, arquivo, ensure_ascii=False, indent=4)
 
 

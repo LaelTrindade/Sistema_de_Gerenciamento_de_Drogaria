@@ -4,6 +4,7 @@ from PIL import Image
 from src.config.paths import IMAGES_MAIN_SCREEN
 from src.views.login_screen_vws import login_screen
 from src.views.dashboard_vws import exibir_dashboard
+from src.services.clock_service import obter_data_hora
 
 
 
@@ -24,14 +25,13 @@ def main_screen(parent):
     parent.update_idletasks()
 
     if platform.system() == 'Windows':
+
         parent.state('zoomed')
+
     else:
+
         parent.after(10, lambda: parent.attributes('-zoomed', True))
 
-    largura = parent.winfo_screenwidth()
-    altura = parent.winfo_screenheight()
-
-    #parent.geometry(f'{largura}x{altura}+0+0')
 
     parent.grid_columnconfigure(0, weight = 0)
     parent.grid_columnconfigure(1, weight = 1)
@@ -75,6 +75,7 @@ def main_screen(parent):
         master = parent,
         height = 56,
         border_width = 1,
+        corner_radius = 0,
         fg_color = '#FFFFFF',
         border_color = '#E2EAF1'
     )
@@ -90,6 +91,13 @@ def main_screen(parent):
 
     topbar.grid_propagate(False)
 
+    def atualizar_relogio():
+
+        data, hora = obter_data_hora()
+
+        calendar.configure(text = f'    {data}\n    {hora}')
+        calendar.after(1000, atualizar_relogio)
+
 
     logo_icon = ctk.CTkLabel(
         master = topbar,
@@ -97,13 +105,13 @@ def main_screen(parent):
         height = 0,
         text = '',
         image = ctk.CTkImage(
-            light_image = Image.open(IMAGES_MAIN_SCREEN/'dashboard_logo.png'),
-            dark_image = Image.open(IMAGES_MAIN_SCREEN/'dashboard_logo.png'),
-            size = ((150, 30))
+            light_image = Image.open(IMAGES_MAIN_SCREEN/'trustmed_logo.png'),
+            dark_image = Image.open(IMAGES_MAIN_SCREEN/'trustmed_logo.png'),
+            size = ((150, 29))
         )
     )
 
-    logo_icon.grid(row = 0, column = 0, sticky = 'w', padx = 15, pady = 10)
+    logo_icon.grid(row = 0, column = 0, sticky = 'w', padx = 20, pady = 10)
 
     calendar = ctk.CTkLabel(
         master = topbar,
@@ -354,6 +362,8 @@ def main_screen(parent):
         'funcionarios': users,
         'relatorios':   reports,
     }
+
+    atualizar_relogio()
 
 
 

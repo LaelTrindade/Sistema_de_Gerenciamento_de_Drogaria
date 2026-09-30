@@ -3,12 +3,15 @@ from PIL import Image
 from src.config.paths import IMAGES_DASHBOARD
 from src.controllers.dashboard_controller import obter_dados_dashboard
 
+
 def exibir_dashboard(frame_parent):
 
     frame_parent.grid_columnconfigure(1, weight = 1)
 
     frame_parent.grid_rowconfigure(3, weight = 1)
     frame_parent.grid_rowconfigure(4, weight = 1)
+
+    
     (
             faturamento,
             medicamentos,
@@ -17,7 +20,9 @@ def exibir_dashboard(frame_parent):
             dias_semana,
             valores_vendas,
             relatorios,
-        ) = obter_dados_dashboard()
+
+    ) = obter_dados_dashboard()
+
 
     hello_user = ctk.CTkLabel(
         master = frame_parent,
@@ -255,17 +260,17 @@ def exibir_dashboard(frame_parent):
 
     sf_relatorios.grid(row = 1, column = 0, sticky = 'nsew', padx = 5, pady = 5)
 
-    sf_relatorios.grid_columnconfigure(0, weight = 0, minsize = 110)
-    sf_relatorios.grid_columnconfigure(1, weight = 0, minsize = 65)
-    sf_relatorios.grid_columnconfigure(2, weight = 0, minsize = 90)
-    sf_relatorios.grid_columnconfigure(3, weight = 0, minsize = 80)
+    sf_relatorios.grid_columnconfigure(0, weight = 4, uniform = 'rel')
+    sf_relatorios.grid_columnconfigure(1, weight = 2, uniform = 'rel')
+    sf_relatorios.grid_columnconfigure(2, weight = 3, uniform = 'rel')
+    sf_relatorios.grid_columnconfigure(3, weight = 3, uniform = 'rel')
 
 
     # Início - [Elementos do Scrollable Frame de Relatórios]
 
     column_produto = ctk.CTkLabel(
         master = sf_relatorios,
-        width = 110,
+        width = 0,
         height = 20,
         corner_radius = 5,
         fg_color = '#B8DCEC',
@@ -278,7 +283,7 @@ def exibir_dashboard(frame_parent):
 
     column_quantidade = ctk.CTkLabel(
         master = sf_relatorios,
-        width = 65,
+        width = 0,
         height = 20,
         corner_radius = 5,
         fg_color = '#B8DCEC',
@@ -291,7 +296,7 @@ def exibir_dashboard(frame_parent):
 
     column_valor = ctk.CTkLabel(
         master = sf_relatorios,
-        width = 90,
+        width = 0,
         height = 20,
         corner_radius = 5,
         fg_color = '#B8DCEC',
@@ -304,7 +309,7 @@ def exibir_dashboard(frame_parent):
 
     column_horario = ctk.CTkLabel(
         master = sf_relatorios,
-        width = 80,
+        width = 0,
         height = 20,
         corner_radius = 5,
         fg_color = '#B8DCEC',
@@ -321,7 +326,7 @@ def exibir_dashboard(frame_parent):
 
         lb_produto = ctk.CTkLabel(
             master = sf_relatorios,
-            width = 110,
+            width = 0,
             height = 20,
             anchor = 'w',
             text = produto_texto
@@ -358,11 +363,14 @@ def exibir_dashboard(frame_parent):
 
     fr_alertas = ctk.CTkFrame(
         master = frame_parent,
+        height = 240,
         corner_radius = 5,
         border_width = 1,
         fg_color = '#FFF1F1',
         border_color = '#F3B8BA'
     )
+
+    fr_alertas.grid_propagate(False)
 
     fr_alertas.grid_columnconfigure(0, weight = 1)
     fr_alertas.grid_rowconfigure(1, weight = 1)
@@ -398,89 +406,35 @@ def exibir_dashboard(frame_parent):
 
     fr_transparent.grid(row = 1, column = 0, sticky = 'nsew', padx = 10, pady = 10)
 
-    alert_1 = ctk.CTkLabel(
-        master = fr_transparent,
-        width = 0,
-        height = 0,
-        anchor = 'w',
-        compound = 'left',
-        font = ('Inter', 14, 'bold'),
-        text = '  Medicamento com estoque baixo',
-        image = ctk.CTkImage(
-            light_image = Image.open(IMAGES_DASHBOARD/'warning_icon.png'),
-            dark_image = Image.open(IMAGES_DASHBOARD/'warning_icon.png'),
-            size = (20, 20)
+    for i, texto in enumerate(alertas[:3]):
+
+        alert_titulo = ctk.CTkLabel(
+            master = fr_transparent,
+            width = 0,
+            height = 0,
+            anchor = 'w',
+            compound = 'left',
+            font = ('Inter', 14, 'bold'),
+            text = '  Medicamento com estoque baixo',
+            image = ctk.CTkImage(
+                light_image = Image.open(IMAGES_DASHBOARD/'warning_icon.png'),
+                dark_image = Image.open(IMAGES_DASHBOARD/'warning_icon.png'),
+                size = (20, 20)
+            )
         )
-    )
 
-    alert_1.grid(row = 0, column = 0, sticky = 'new', padx = 10, pady = (10, 0))
+        alert_titulo.grid(row = i * 2, column = 0, sticky = 'new', padx = 10, pady = (10, 0))
 
-    alert_1aux = ctk.CTkLabel(
-        master = fr_transparent,
-        width = 0,
-        height = 0,
-        anchor = 'w',
-        font = ('Inter', 12),
-        text = alertas[0],
-    )
-
-    alert_1aux.grid(row = 1, column = 0, sticky = 'new', padx = 35, pady = (2, 20))
-
-    alert_2 = ctk.CTkLabel(
-        master = fr_transparent,
-        width = 0,
-        height = 0,
-        anchor = 'w',
-        compound = 'left',
-        font = ('Inter', 14, 'bold'),
-        text = '  Medicamento com estoque baixo',
-        image = ctk.CTkImage(
-            light_image = Image.open(IMAGES_DASHBOARD/'warning_icon.png'),
-            dark_image = Image.open(IMAGES_DASHBOARD/'warning_icon.png'),
-            size = (20, 20)
+        alert_detalhe = ctk.CTkLabel(
+            master = fr_transparent,
+            width = 0,
+            height = 0,
+            anchor = 'w',
+            font = ('Inter', 12),
+            text = f'• {texto}'
         )
-    )
 
-    alert_2.grid(row = 2, column = 0, sticky = 'new', padx = 10)
-
-    alert_2aux = ctk.CTkLabel(
-        master = fr_transparent,
-        width = 0,
-        height = 0,
-        anchor = 'w',
-        font = ('Inter', 12),
-        text = alertas[1],
-    )
-
-    alert_2aux.grid(row = 3, column = 0, sticky = 'new', padx = 35, pady = (2, 20))
-
-    alert_3 = ctk.CTkLabel(
-        master = fr_transparent,
-        width = 0,
-        height = 0,
-        anchor = 'w',
-        compound = 'left',
-        font = ('Inter', 14, 'bold'),
-        text = '  Medicamento com estoque baixo',
-        image = ctk.CTkImage(
-            light_image = Image.open(IMAGES_DASHBOARD/'warning_icon.png'),
-            dark_image = Image.open(IMAGES_DASHBOARD/'warning_icon.png'),
-            size = (20, 20)
-        )
-    )
-
-    alert_3.grid(row = 4, column = 0, sticky = 'new', padx = 10)
-
-    alert_3aux = ctk.CTkLabel(
-        master = fr_transparent,
-        width = 0,
-        height = 0,
-        anchor = 'w',
-        font = ('Inter', 12),
-        text = alertas[2],
-    )
-
-    alert_3aux.grid(row = 5, column = 0, sticky = 'new', padx = 35, pady = (2, 0))
+        alert_detalhe.grid(row = i * 2 + 1, column = 0, sticky = 'new', padx = 35, pady = (2, 10))
 
     # Fim [Widgets do Frame de Alertas].
 
