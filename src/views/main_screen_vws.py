@@ -62,9 +62,9 @@ def main_screen(parent):
             cor = cor_selecionada if key == nome_tela else cor_normal
             button.configure(fg_color = cor)
 
-            if nome_tela == 'dashboard':
+        if nome_tela == 'dashboard':
 
-                exibir_dashboard(fr_transparent)
+            exibir_dashboard(fr_transparent)
 
 
         tela_atual = nome_tela
@@ -114,7 +114,7 @@ def main_screen(parent):
         )
     )
 
-    logo_icon.grid(row = 0, column = 0, sticky = 'w', padx = 20, pady = 10)
+    logo_icon.grid(row = 0, column = 0, sticky = 'w', padx = 15, pady = 12)
 
     calendar = ctk.CTkLabel(
         master = topbar,
