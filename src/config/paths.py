@@ -7,6 +7,7 @@ ASSETS_IMAGES = BASE_DIR/'assets'/'images'/'icons'
 IMAGES_LOGIN_SCREEN = ASSETS_IMAGES/'login_screen'
 IMAGES_MAIN_SCREEN = ASSETS_IMAGES/'main_screen'
 IMAGES_DASHBOARD = ASSETS_IMAGES/'dashboard'
+IMAGES_MEDICAMENTOS = ASSETS_IMAGES/'medicamentos'
 
 # Caminho dos JSONs
 CAMINHO_USERS_JSON = BASE_DIR/'database'/'users_database.json'

@@ -4,6 +4,7 @@ from PIL import Image
 from src.config.paths import IMAGES_MAIN_SCREEN
 from src.views.login_screen_vws import login_screen
 from src.views.dashboard_vws import exibir_dashboard
+from src.views.medicamentos_vws import exibir_medicamentos
 from src.services.clock_service import obter_data_hora
 
 
@@ -40,6 +41,19 @@ def main_screen(parent):
     parent.grid_rowconfigure(1, weight = 1)
 
 
+    def resetar_grid(frame):
+
+        colunas, linhas = frame.grid_size()
+
+        for i in range(colunas):
+
+            frame.grid_columnconfigure(i, weight = 0, minsize = 0, pad = 0, uniform = '')
+
+        for i in range(linhas):
+
+            frame.grid_rowconfigure(i, weight = 0, minsize = 0, pad = 0, uniform = '')
+    
+
     cor_normal = 'transparent'
     cor_selecionada = '#0B527D'
 
@@ -58,6 +72,8 @@ def main_screen(parent):
             
             widget.destroy()
 
+        resetar_grid(fr_transparent)
+
         for key, button in sidebar_buttons.items():
             cor = cor_selecionada if key == nome_tela else cor_normal
             button.configure(fg_color = cor)
@@ -65,6 +81,10 @@ def main_screen(parent):
         if nome_tela == 'dashboard':
 
             exibir_dashboard(fr_transparent)
+
+        if nome_tela == 'medicamentos':
+
+            exibir_medicamentos(fr_transparent)
 
 
         tela_atual = nome_tela
