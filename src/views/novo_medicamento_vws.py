@@ -1,5 +1,8 @@
+import json
+import os
 import customtkinter as ctk
 from PIL import Image
+from tkinter import messagebox
 from src.config.paths import IMAGES_MEDICAMENTOS
 
 
@@ -496,6 +499,53 @@ def exibir_novo_medicamento(parent):
 
         novo_medicamento.destroy()
 
+    def salvar_dados_medicamento():
+        
+        nome = entry_1.get().strip()
+        principio = entry_2.get().strip()
+        laboratorio = entry_3.get().strip()
+        categoria = option_menu.get().strip()
+        lote = entry_4.get().strip()
+        validade = entry_5.get().strip()
+        preco = entry_6.get().strip()
+
+        if not nome or not principio or not laboratorio or not lote or not validade or not preco:
+
+            lbl_mensagem.configure(text="Preencha todos os campos.", text_color="#FF4C4C")
+            return  
+
+        novo_remedio = {
+            "nome_comercial": nome,
+            "principio_ativo": principio,
+            "laboratorio": laboratorio,
+            "categoria": categoria,
+            "lote": lote,
+            "validade": validade,
+            "preco": preco
+        }
+
+        arquivo_banco = "medicamento.json"
+        lista_de_medicamentos = []
+
+        if os.path.exists(arquivo_banco):
+            try:
+                with open(arquivo_banco, "r", encoding="utf-8") as arquivo:
+                    conteudo_atual = arquivo.read()
+                    if conteudo_atual.strip():
+                        lista_de_medicamentos = json.loads(conteudo_atual)
+                    
+                        if not isinstance(lista_de_medicamentos, list):
+                            lista_de_medicamentos = [lista_de_medicamentos]
+            except Exception:
+                lista_de_medicamentos = []
+
+        lista_de_medicamentos.append(novo_remedio)
+
+        with open(arquivo_banco, "w", encoding="utf-8") as arquivo:
+            json.dump(lista_de_medicamentos, arquivo, ensure_ascii=False, indent=4)
+        
+        novo_medicamento.destroy()
+
 
     cancel_button = ctk.CTkButton(
         master = fr_actions,
@@ -520,7 +570,7 @@ def exibir_novo_medicamento(parent):
         command = fechar_toplevel
     )
 
-    cancel_button.grid(row = 0, column = 0, sticky = 'e', padx = 10, pady = 10)
+    cancel_button.grid(row = 1, column = 0, sticky = 'e', padx = 10, pady = 10)
 
     save_button = ctk.CTkButton(
         master = fr_actions,
@@ -541,7 +591,15 @@ def exibir_novo_medicamento(parent):
             light_image = Image.open(IMAGES_MEDICAMENTOS/'disk_icon.png'),
             dark_image = Image.open(IMAGES_MEDICAMENTOS/'disk_icon.png'),
             size = ((24, 24))
-        )
+        ),
+        command = salvar_dados_medicamento
     )
 
-    save_button.grid(row = 0, column = 1, sticky = 'e', padx = (0, 10), pady = 10)
+    save_button.grid(row = 1, column = 1, sticky = 'e', padx = (0, 10), pady = 10)
+
+    lbl_mensagem = ctk.CTkLabel(
+        master = fr_actions,
+        text = "",
+        font = ('Inter', 12, 'bold')
+    )
+    lbl_mensagem.grid(row = 1, column = 0, columnspan = 2, pady = (5, 0))
