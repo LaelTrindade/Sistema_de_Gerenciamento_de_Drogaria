@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from PIL import Image
 from src.config.paths import IMAGES_DASHBOARD
-from src.controllers.dashboard_controller import obter_dados_dashboard
+from src.services.dashboard_svc import obter_dados_dashboard
 
 
 def exibir_dashboard(frame_parent):

@@ -5,7 +5,7 @@ from src.config.paths import IMAGES_MAIN_SCREEN
 from src.views.login_screen_vws import login_screen
 from src.views.dashboard_vws import exibir_dashboard
 from src.views.medicamentos_vws import exibir_medicamentos
-from src.services.clock_service import obter_data_hora
+from src.services.main_screen_svc import obter_data_hora
 
 
 

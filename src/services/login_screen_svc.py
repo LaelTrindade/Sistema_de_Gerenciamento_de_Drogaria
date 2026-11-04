@@ -1,15 +1,20 @@
-import json
 import bcrypt
-from src.config.paths import CAMINHO_USERS_JSON
+from src.database.database_svc import conectar
 
 
 def carregar_usuarios():
-  """Lê a lista de usuários do JSON."""
-  if not CAMINHO_USERS_JSON.exists():
-    return []
+  """Lê a lista de usuários do banco."""
+  with conectar() as conexao:
+    linhas = conexao.execute("SELECT * FROM usuarios").fetchall()
 
-  with open(CAMINHO_USERS_JSON, "r", encoding="utf-8") as arquivo:
-    return json.load(arquivo).get("usuarios", [])
+  usuarios = []
+
+  for linha in linhas:
+    usuario = dict(linha)
+    usuario["ativo"] = bool(usuario["ativo"])
+    usuarios.append(usuario)
+
+  return usuarios
 
 
 def validar_login(usuario, senha):

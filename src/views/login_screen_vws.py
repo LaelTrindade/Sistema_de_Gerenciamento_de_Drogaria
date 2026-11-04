@@ -1,8 +1,8 @@
 import customtkinter as ctk
 from PIL import Image
 from src.config.paths import IMAGES_LOGIN_SCREEN
-from src.controllers.auth_controller import validar_login
-from src.views.messagebox_vws import exibir_messagebox
+from src.services.login_screen_svc import validar_login
+from src.views.messagebox_vws import exibir_messagebox, MODO_ERRO
 
 
 def login_screen(parent):
@@ -24,7 +24,7 @@ def login_screen(parent):
             main_screen(parent)
 
         else:
-            exibir_messagebox(parent, "Erro", mensagem)
+            exibir_messagebox(parent, MODO_ERRO, mensagem)
                  
     window_width = 720
     window_height = 500

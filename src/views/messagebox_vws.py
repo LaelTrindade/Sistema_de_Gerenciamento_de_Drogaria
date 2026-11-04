@@ -1,101 +1,181 @@
 import customtkinter as ctk
+from PIL import Image
+from src.config.paths import IMAGES_MESSAGEBOX
 
 
-def exibir_messagebox(parent, titulo, mensagem):
+MODO_SUCESSO = 1
+MODO_ALERTA = 2
+MODO_ERRO = 3
+MODO_OUTROS = 4
+MODO_BOOLEANO = 5
 
-    largura_alerta = 350
-    altura_alerta = 160
+janela_aberta = None
 
-    alerta = ctk.CTkToplevel(parent)
+def exibir_messagebox(parent, modo, mensagem, ao_confirmar = None):
 
-    # Mantém a janela invisível durante a construção
-    alerta.withdraw()
+    global janela_aberta
 
-    alerta.overrideredirect(True)
-    alerta.transient(parent)
+    if janela_aberta is not None and janela_aberta.winfo_exists():
 
-    # Calcula a posição central em relação ao parent
-    parent.update_idletasks()
+        janela_aberta.focus_force()
+        return
 
-    x = (
-        parent.winfo_x()
-        + (parent.winfo_width() // 2)
-        - (largura_alerta // 2)
+
+    messagebox = ctk.CTkToplevel(parent)
+    janela_aberta = messagebox
+
+    largura_messagebox = 360
+    altura_messagebox = 190
+
+    x = ((parent.winfo_x() + (parent.winfo_width()) // 2) - (largura_messagebox // 2))
+    y = ((parent.winfo_y() + (parent.winfo_height()) // 2) - (altura_messagebox // 2))
+
+    messagebox.overrideredirect(True)
+    messagebox.transient(parent.winfo_toplevel())
+    messagebox.geometry(f'{largura_messagebox}x{altura_messagebox}+{x}+{y}')
+
+    messagebox.grid_columnconfigure(0, weight = 1)
+    messagebox.grid_rowconfigure(0, weight = 1)
+
+    fr_transparent = ctk.CTkFrame(
+        master = messagebox,
+        corner_radius = 0,
+        border_width = 2,
+        border_color = '#DCE6EE',
+        fg_color = 	'#FFFFFF'
+    )    
+
+    fr_transparent.grid(row = 0, column = 0, sticky = 'nsew')
+    fr_transparent.pack_propagate(False)
+
+    label_title = ctk.CTkLabel(
+        master = fr_transparent,
+        width = 0,
+        height = 0,
+        anchor = 'w',
+        compound = 'left',
+        font = ('Inter', 16, 'bold'),
+        text = ''
     )
 
-    y = (
-        parent.winfo_y()
-        + (parent.winfo_height() // 2)
-        - (altura_alerta // 2)
+    label_title.pack(side = 'top', anchor = 'center', pady = (20, 0))
+
+    label_message = ctk.CTkLabel(
+        master = fr_transparent,
+        width = 0,
+        height = 0,
+        text = mensagem,
+        wraplength = 320,
+        font = ('Inter', 14)
     )
 
-    alerta.geometry(
-        f"{largura_alerta}x{altura_alerta}+{x}+{y}"
-    )
+    label_message.pack(anchor = 'center', expand = True, pady = 5)
 
-    # Fundo
-    fr_fundo = ctk.CTkFrame(
-        master=alerta,
-        fg_color="#FFF5F5",
-        border_color="#F2B8B8",
-        border_width=2,
-        corner_radius=8
-    )
 
-    fr_fundo.pack(
-        fill="both",
-        expand=True
-    )
+    def fechar_messagebox():
+            
+        global janela_aberta
 
-    # Título
-    lb_titulo = ctk.CTkLabel(
-        master=fr_fundo,
-        text=titulo,
-        font=("Inter", 16, "bold"),
-        text_color="#D93036"
-    )
+        janela_aberta = None
+        messagebox.destroy()
 
-    lb_titulo.pack(
-        pady=(15, 5)
-    )
 
-    # Mensagem
-    lb_mensagem = ctk.CTkLabel(
-        master=fr_fundo,
-        text=mensagem,
-        font=("Inter", 13),
-        text_color="#18344A"
-    )
-
-    lb_mensagem.pack(
-        pady=(0, 20)
-    )
-
-    # Fechar
-    def fechar_alerta():
-        alerta.grab_release()
-        alerta.destroy()
-        parent.focus_force()
-
-    # Botão
-    btn_ok = ctk.CTkButton(
-        master=fr_fundo,
-        text="Tentar Novamente",
-        width=130,
-        height=32,
+    button = ctk.CTkButton(
+        master = fr_transparent,
+        width = 75,
+        height = 30,
+        text = 'Ok',
         cursor = 'hand2',
-        font=("Inter", 12, "bold"),
-        fg_color="#D93036",
-        hover_color="#B9272D",
+        corner_radius = 5,
         text_color = '#FFFFFF',
-        command=fechar_alerta
+        font = ('Inter', 15, 'bold'),
+        command = fechar_messagebox
     )
 
-    btn_ok.pack()
+    button.pack(anchor = 'center', pady = (0, 20))
 
-    # Só mostra depois de tudo pronto
-    alerta.update_idletasks()
-    alerta.deiconify()
-    alerta.lift()
-    alerta.focus_force()
-    alerta.grab_set()
+    if modo == MODO_SUCESSO:
+
+        fr_transparent.configure(fg_color = '#E8F7F1', border_color = '#B8E8D5')
+
+        label_title.configure(text = ' Sucesso!', text_color = '#20B486', image = ctk.CTkImage(
+            light_image = Image.open(IMAGES_MESSAGEBOX/'sucess_icon.png'),
+            dark_image = Image.open(IMAGES_MESSAGEBOX/'sucess_icon.png'),
+            size = ((16, 16))
+        ))
+
+        button.configure(fg_color = '#20B486', hover_color = '#199B73')
+
+    if modo == MODO_ALERTA:
+
+        fr_transparent.configure(fg_color = '#FFF7E6', border_color = '#F0D99F')
+
+        label_title.configure(text = ' Alerta!', text_color = '#D99A18', image = ctk.CTkImage(
+            light_image = Image.open(IMAGES_MESSAGEBOX/'warning_icon.png'),
+            dark_image = Image.open(IMAGES_MESSAGEBOX/'warning_icon.png'),
+            size = ((16, 16))
+        ))
+
+        button.configure(fg_color = '#D99A18', hover_color = '#B98212')
+
+    if modo == MODO_ERRO:
+
+        fr_transparent.configure(fg_color = '#FFF1F1', border_color = '#F3B8BA')
+
+        label_title.configure(text = ' Erro!', text_color = '#E74C4C', image = ctk.CTkImage(
+            light_image = Image.open(IMAGES_MESSAGEBOX/'error_icon.png'),
+            dark_image = Image.open(IMAGES_MESSAGEBOX/'error_icon.png'),
+            size = ((16, 16))
+        ))
+
+        button.configure(fg_color = '#E74C4C', hover_color = '#CC3D3D')
+
+    if modo == MODO_OUTROS:
+
+        fr_transparent.configure(fg_color = '#E8F3FA', border_color = '#B8DCEC')
+
+        label_title.configure(text = ' Informação!', text_color = '#1C6EA4', image = ctk.CTkImage(
+            light_image = Image.open(IMAGES_MESSAGEBOX/'info_icon.png'),
+            dark_image = Image.open(IMAGES_MESSAGEBOX/'info_icon.png'),
+            size = ((16, 16))
+        ))
+
+        button.configure(fg_color = '#1C6EA4', hover_color = '#155A88')
+
+    if modo == MODO_BOOLEANO:
+
+        fr_transparent.configure(fg_color = '#E8F3FA', border_color = '#B8DCEC')
+
+        label_title.configure(text = ' Informação!', text_color = '#1C6EA4', image = ctk.CTkImage(
+            light_image = Image.open(IMAGES_MESSAGEBOX/'info_icon.png'),
+            dark_image = Image.open(IMAGES_MESSAGEBOX/'info_icon.png'),
+            size = ((16, 16))
+        ))
+
+
+        def confirmar():
+
+            fechar_messagebox()
+
+            if ao_confirmar:
+
+                ao_confirmar()
+
+
+        button.configure(text = 'Sim', fg_color = '#1C6EA4', hover_color = '#155A88', command = confirmar)
+        button.pack_configure(side = 'left', anchor = 's', padx = (75, 0))
+
+        button_2 = ctk.CTkButton(
+            master = fr_transparent,
+            width = 75,
+            height = 30,
+            text = 'Não',
+            cursor = 'hand2',
+            corner_radius = 5,
+            text_color = '#FFFFFF',
+            font = ('Inter', 15, 'bold'),
+            command = fechar_messagebox
+        )
+
+        button_2.configure(text = 'Não', fg_color = '#1C6EA4', hover_color = '#155A88')
+        button_2.pack(side = 'right', anchor = 's', padx = (0, 75), pady = (0, 20))

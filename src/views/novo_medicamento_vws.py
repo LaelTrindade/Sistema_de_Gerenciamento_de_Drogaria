@@ -1,14 +1,12 @@
-import json
-import os
 import customtkinter as ctk
 from PIL import Image
-from tkinter import messagebox
 from src.config.paths import IMAGES_MEDICAMENTOS
+from src.services.novo_medicamento_svc import salvar_dados_medicamento
 
 
 janela_aberta = None
 
-def exibir_novo_medicamento(parent):
+def exibir_novo_medicamento(parent, ao_salvar):
 
     global janela_aberta
 
@@ -33,6 +31,7 @@ def exibir_novo_medicamento(parent):
     y = ((parent.winfo_y() + (parent.winfo_height()) // 2) - (altura // 2))
 
     novo_medicamento.overrideredirect(True)
+    novo_medicamento.transient(parent.winfo_toplevel())
     novo_medicamento.geometry(f'{largura}x{altura}+{x}+{y}')
 
     def dar_foco():
@@ -45,6 +44,7 @@ def exibir_novo_medicamento(parent):
         master = novo_medicamento,
         fg_color = '#073F61',
         border_width = 1,
+        corner_radius = 0,
         border_color = '#263746'
     )
 
@@ -131,7 +131,7 @@ def exibir_novo_medicamento(parent):
 
     frame_nome = ctk.CTkFrame(
         master = fr_conteudo,
-        width = 296,
+        width = 605,
         height = 35,
         border_width = 1,
         corner_radius = 5,
@@ -139,7 +139,7 @@ def exibir_novo_medicamento(parent):
         border_color = '#D9E3EC'
     )
 
-    frame_nome.grid(row = 1, column = 0, sticky = 'w', padx = (20, 0), pady = (4, 0))
+    frame_nome.grid(row = 1, column = 0, sticky = 'ew', padx = 20, pady = (4, 0), columnspan = 2)
     frame_nome.pack_propagate(False)
 
     entry_1 = ctk.CTkEntry(
@@ -172,7 +172,7 @@ def exibir_novo_medicamento(parent):
         )
     )
 
-    ativo.grid(row = 0, column = 1, sticky = 'w', padx = (15, 20), pady = (25, 0))
+    ativo.grid(row = 2, column = 0, sticky = 'w', padx = (20, 0), pady = (25, 0))
 
     frame_ativo = ctk.CTkFrame(
         master = fr_conteudo,
@@ -184,7 +184,7 @@ def exibir_novo_medicamento(parent):
         border_color = '#D9E3EC'
     )
 
-    frame_ativo.grid(row = 1, column = 1, sticky = 'w', padx = (15, 20), pady = (4, 0))
+    frame_ativo.grid(row = 3, column = 0, sticky = 'w', padx = (20, 0), pady = (4, 0))
     frame_ativo.pack_propagate(False)
 
     entry_2 = ctk.CTkEntry(
@@ -217,7 +217,7 @@ def exibir_novo_medicamento(parent):
         )
     )
 
-    laboratorio.grid(row = 2, column = 0, sticky = 'w', padx = (20, 0), pady = (25, 0))
+    laboratorio.grid(row = 2, column = 1, sticky = 'w', padx = (15, 20), pady = (25, 0))
 
     frame_laboratorio = ctk.CTkFrame(
         master = fr_conteudo,
@@ -229,7 +229,7 @@ def exibir_novo_medicamento(parent):
         border_color = '#D9E3EC'
     )
 
-    frame_laboratorio.grid(row = 3, column = 0, sticky = 'w', padx = (20, 0), pady = (4, 0))
+    frame_laboratorio.grid(row = 3, column = 1, sticky = 'w', padx = (15, 20), pady = (4, 0))
     frame_laboratorio.pack_propagate(False)
 
     entry_3 = ctk.CTkEntry(
@@ -262,7 +262,7 @@ def exibir_novo_medicamento(parent):
         )
     )
 
-    categoria.grid(row = 2, column = 1, sticky = 'w', padx = (15, 20), pady = (25, 0))
+    categoria.grid(row = 4, column = 0, sticky = 'w', padx = (20, 0), pady = (25, 0))
 
     frame_categoria = ctk.CTkFrame(
         master = fr_conteudo,
@@ -274,7 +274,7 @@ def exibir_novo_medicamento(parent):
         border_color = '#D9E3EC'
     )
 
-    frame_categoria.grid(row = 3, column = 1, sticky = 'w', padx = (15, 20), pady = (4, 0))
+    frame_categoria.grid(row = 5, column = 0, sticky = 'w', padx = (20, 0), pady = (4, 0))
     frame_categoria.pack_propagate(False)
 
     option_categorias = [
@@ -304,123 +304,9 @@ def exibir_novo_medicamento(parent):
     option_menu.pack(fill = 'both', expand = True, padx = 5, pady = 5)
     # Fim categoria
 
-    # Início lote
-    fr_transparent_2 = ctk.CTkFrame(
-        master = fr_conteudo,
-        fg_color = 'transparent'
-    )
-
-    fr_transparent_2.grid(row = 4, column = 0, sticky = 'ew', padx = 20, pady = (25, 0), columnspan = 2)
-
-    fr_transparent_2.grid_columnconfigure(0, weight = 0)
-    
-    lote = ctk.CTkLabel(
-        master = fr_transparent_2,
-        width = 0,
-        height = 0,
-        anchor = 'w',
-        text = ' Lote',
-        compound = 'left',
-        font = ('Inter', 14),
-        text_color = '#183E64',
-        image = ctk.CTkImage(
-            light_image = Image.open(IMAGES_MEDICAMENTOS/'barcode_icon.png'),
-            dark_image = Image.open(IMAGES_MEDICAMENTOS/'barcode_icon.png'),
-            size = ((16, 16))
-        )
-    )
-
-    lote.grid(row = 0, column = 0, sticky = 'w')
-
-    frame_lote = ctk.CTkFrame(
-        master = fr_transparent_2,
-        width = 192,
-        height = 35,
-        border_width = 1,
-        corner_radius = 5,
-        fg_color = '#FFFFFF',
-        border_color = '#D9E3EC'
-    )
-
-    frame_lote.grid(row = 1, column = 0, sticky = 'w', pady = (4, 0))
-    frame_lote.pack_propagate(False)
-
-    entry_4 = ctk.CTkEntry(
-        master = frame_lote,
-        border_width = 0,
-        font = ('Inter', 14),
-        text_color = '#1E293B',
-        fg_color = 'transparent',
-        placeholder_text = 'Ex.: L240815',
-        placeholder_text_color = '#94A3B8'    
-    )
-
-    entry_4.pack(fill = 'both', expand = True, padx = 5, pady = 5)
-
-    validade = ctk.CTkLabel(
-        master = fr_transparent_2,
-        width = 0,
-        height = 0,
-        anchor = 'w',
-        text = ' Validade',
-        compound = 'left',
-        font = ('Inter', 14),
-        text_color = '#183E64',
-        image = ctk.CTkImage(
-            light_image = Image.open(IMAGES_MEDICAMENTOS/'calendar_icon.png'),
-            dark_image = Image.open(IMAGES_MEDICAMENTOS/'calendar_icon.png'),
-            size = ((16, 16))
-        )
-    )
-
-    validade.grid(row = 0, column = 1, sticky = 'w', padx = 15)
-
-    frame_validade = ctk.CTkFrame(
-        master = fr_transparent_2,
-        width = 192,
-        height = 35,
-        border_width = 1,
-        corner_radius = 5,
-        fg_color = '#FFFFFF',
-        border_color = '#D9E3EC'
-    )
-
-    frame_validade.grid(row = 1, column = 1, sticky = 'w', padx = 15, pady = (4, 0))
-    frame_validade.pack_propagate(False)
-
-    def formatar_validade(event):
-
-        texto = entry_5.get()
-        numeros = ''.join(c for c in texto if c.isdigit())[:8]
-
-        if len(numeros) > 4:
-            novo_texto = f'{numeros[:2]}/{numeros[2:4]}/{numeros[4:]}'
-
-        elif len(numeros) > 2:
-            novo_texto = f'{numeros[:2]}/{numeros[2:]}'
-
-        else:
-            novo_texto = numeros
-
-        entry_5.delete(0, 'end')
-        entry_5.insert(0, novo_texto)
-
-
-    entry_5 = ctk.CTkEntry(
-        master = frame_validade,
-        border_width = 0,
-        font = ('Inter', 14),
-        text_color = '#1E293B',
-        fg_color = 'transparent',
-        placeholder_text = 'Ex.: DD/MM/AAAA',
-        placeholder_text_color = '#94A3B8'    
-    )
-
-    entry_5.pack(fill = 'both', expand = True, padx = 5, pady = 5)
-    entry_5.bind('<KeyRelease>', formatar_validade)
-
+    # Início valor
     valor = ctk.CTkLabel(
-        master = fr_transparent_2,
+        master = fr_conteudo,
         width = 0,
         height = 0,
         anchor = 'w',
@@ -435,11 +321,11 @@ def exibir_novo_medicamento(parent):
         )
     )
 
-    valor.grid(row = 0, column = 2, sticky = 'w')
+    valor.grid(row = 4, column = 1, sticky = 'w', padx = (15, 0), pady = (25, 0))
 
     frame_valor = ctk.CTkFrame(
-        master = fr_transparent_2,
-        width = 192,
+        master = fr_conteudo,
+        width = 296,
         height = 35,
         border_width = 1,
         corner_radius = 5,
@@ -447,27 +333,27 @@ def exibir_novo_medicamento(parent):
         border_color = '#D9E3EC'
     )
 
-    frame_valor.grid(row = 1, column = 2, sticky = 'w', pady = (4, 0))
+    frame_valor.grid(row = 5, column = 1, sticky = 'w', padx = (15, 20), pady = (4, 0))
     frame_valor.pack_propagate(False)
 
 
     def formatar_preco(event):
 
-        texto = entry_6.get()
+        texto = entry_4.get()
         numeros = ''.join(c for c in texto if c.isdigit())[:8]
 
         if not numeros or int(numeros) == 0:
-            entry_6.delete(0, 'end')
+            entry_4.delete(0, 'end')
             return
 
         valor = int(numeros) / 100
         novo_texto = f'R$ {valor:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
 
-        entry_6.delete(0, 'end')
-        entry_6.insert(0, novo_texto)
+        entry_4.delete(0, 'end')
+        entry_4.insert(0, novo_texto)
 
 
-    entry_6 = ctk.CTkEntry(
+    entry_4 = ctk.CTkEntry(
         master = frame_valor,
         border_width = 0,
         font = ('Inter', 14),
@@ -477,8 +363,9 @@ def exibir_novo_medicamento(parent):
         placeholder_text_color = '#94A3B8'    
     )
 
-    entry_6.pack(fill = 'both', expand = True, padx = 5, pady = 5)
-    entry_6.bind('<KeyRelease>', formatar_preco)
+    entry_4.pack(fill = 'both', expand = True, padx = 5, pady = 5)
+    entry_4.bind('<KeyRelease>', formatar_preco)
+    # Fim valor
 
 # Fim fr_conteudo
 
@@ -489,61 +376,26 @@ def exibir_novo_medicamento(parent):
         fg_color = '#E2E6EA'
     )
 
-    fr_actions.grid(row = 5, column = 0, pady = (25, 0), sticky = 'sew', columnspan = 2)
+    fr_actions.grid(row = 6, column = 0, pady = (25, 0), sticky = 'sew', columnspan = 2)
     
     fr_actions.grid_propagate(False)
     fr_actions.grid_columnconfigure(0, weight = 1)
 
 
+    lb_message = ctk.CTkLabel(
+        master = fr_actions,
+        width = 0,
+        height = 0,
+        text = '',
+        text_color = '#D93036',
+        font = ('Inter', 12, 'bold'),
+    )
+
+    lb_message.grid(row = 0, column = 0, sticky = 'w', padx = (20, 0), pady = 12)
+
+
     def fechar_toplevel():
 
-        novo_medicamento.destroy()
-
-    def salvar_dados_medicamento():
-        
-        nome = entry_1.get().strip()
-        principio = entry_2.get().strip()
-        laboratorio = entry_3.get().strip()
-        categoria = option_menu.get().strip()
-        lote = entry_4.get().strip()
-        validade = entry_5.get().strip()
-        preco = entry_6.get().strip()
-
-        if not nome or not principio or not laboratorio or not lote or not validade or not preco:
-
-            lbl_mensagem.configure(text="Preencha todos os campos.", text_color="#FF4C4C")
-            return  
-
-        novo_remedio = {
-            "nome_comercial": nome,
-            "principio_ativo": principio,
-            "laboratorio": laboratorio,
-            "categoria": categoria,
-            "lote": lote,
-            "validade": validade,
-            "preco": preco
-        }
-
-        arquivo_banco = "medicamento.json"
-        lista_de_medicamentos = []
-
-        if os.path.exists(arquivo_banco):
-            try:
-                with open(arquivo_banco, "r", encoding="utf-8") as arquivo:
-                    conteudo_atual = arquivo.read()
-                    if conteudo_atual.strip():
-                        lista_de_medicamentos = json.loads(conteudo_atual)
-                    
-                        if not isinstance(lista_de_medicamentos, list):
-                            lista_de_medicamentos = [lista_de_medicamentos]
-            except Exception:
-                lista_de_medicamentos = []
-
-        lista_de_medicamentos.append(novo_remedio)
-
-        with open(arquivo_banco, "w", encoding="utf-8") as arquivo:
-            json.dump(lista_de_medicamentos, arquivo, ensure_ascii=False, indent=4)
-        
         novo_medicamento.destroy()
 
 
@@ -570,7 +422,33 @@ def exibir_novo_medicamento(parent):
         command = fechar_toplevel
     )
 
-    cancel_button.grid(row = 1, column = 0, sticky = 'e', padx = 10, pady = 10)
+    cancel_button.grid(row = 0, column = 1, sticky = 'e', padx = 10, pady = 10)
+
+
+    def salvar_dados():
+
+        ok, mensagem = salvar_dados_medicamento(
+                            entry_1.get(),
+                            entry_2.get(),
+                            entry_3.get(),
+                            option_menu.get(),
+                            entry_4.get()
+                        )
+
+        if ok:
+
+            ao_salvar()
+
+            lb_message.configure(text = mensagem, text_color = '#20B486')
+            lb_message.after(2000, fechar_toplevel)
+
+            save_button.configure(state = 'disabled')
+
+        else:
+
+            lb_message.configure(text = mensagem)
+            lb_message.after(5000, lambda: lb_message.configure(text = ''))
+
 
     save_button = ctk.CTkButton(
         master = fr_actions,
@@ -592,14 +470,7 @@ def exibir_novo_medicamento(parent):
             dark_image = Image.open(IMAGES_MEDICAMENTOS/'disk_icon.png'),
             size = ((24, 24))
         ),
-        command = salvar_dados_medicamento
+        command = salvar_dados
     )
 
-    save_button.grid(row = 1, column = 1, sticky = 'e', padx = (0, 10), pady = 10)
-
-    lbl_mensagem = ctk.CTkLabel(
-        master = fr_actions,
-        text = "",
-        font = ('Inter', 12, 'bold')
-    )
-    lbl_mensagem.grid(row = 1, column = 0, columnspan = 2, pady = (5, 0))
+    save_button.grid(row = 0, column = 2, sticky = 'e', padx = (0, 10), pady = 10)
